@@ -32,7 +32,7 @@ jobs:
       - name: Link /usr/local/lib.
         run: ln -s /usr/local/lib lib
       - name: Echo contents of Python dir.
-        run: tree /opt/hostedtoolcache/Python/3.11.3/x64
+        run: python -m site
       - name: Cache Ansible.
         id: cache-ansible
         uses: actions/cache@v3
