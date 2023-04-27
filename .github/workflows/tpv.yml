@@ -29,11 +29,13 @@ jobs:
           cache: 'pip'
 
       # Install Ansible.
+      - name: Link /usr/local/lib.
+        run: ln -s /usr/local/lib lib
       - name: Cache Ansible.
         id: cache-ansible
         uses: actions/cache@v3
         with:
-          path: /usr/local/lib/python*/dist-packages/ansible*
+          path: lib/python*/dist-packages/ansible*
           key: ${{ hashFiles('infrastructure-playbook/requirements.txt') }}
       - name: Install Ansible (fast when an existing installation was already cached).
         working-directory: 'infrastructure-playbook'
