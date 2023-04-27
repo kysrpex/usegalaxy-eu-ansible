@@ -31,11 +31,13 @@ jobs:
       # Install Ansible.
       - name: Link /usr/local/lib.
         run: ln -s /usr/local/lib lib
+      - name: Echo contents of Python dir.
+        run: echo $(ls /opt/hostedtoolcache/Python/3.11.3/x64)
       - name: Cache Ansible.
         id: cache-ansible
         uses: actions/cache@v3
         with:
-          path: lib/python*/dist-packages/ansible*
+          path: /opt/hostedtoolcache/Python/*/*/lib/python*/dist-packages/ansible*
           key: ${{ hashFiles('infrastructure-playbook/requirements.txt') }}
       - name: Install Ansible (fast when an existing installation was already cached).
         working-directory: 'infrastructure-playbook'
