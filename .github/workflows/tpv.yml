@@ -35,11 +35,12 @@ jobs:
         run: |
           pip3 install rdflib
           python -m site
-          tree /home/runner/work/usegalaxy-eu-ansible/usegalaxy-eu-ansible
-          tree /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages
-          tree /home/runner/.local/lib/python3.11/site-packages
-          tree /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11
-          tree /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/lib-dynload
+          # tree /home/runner/work/usegalaxy-eu-ansible/usegalaxy-eu-ansible
+          tree /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages || true
+          tree /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11 || true
+          tree /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/lib-dynload || true
+          tree /home/runner/.local/lib/python3.11/site-packages || true
+          false
       - name: Cache Ansible.
         id: cache-ansible
         uses: actions/cache@v3
