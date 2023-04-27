@@ -29,23 +29,11 @@ jobs:
           cache: 'pip'
 
       # Install Ansible.
-      - name: Link /usr/local/lib.
-        run: ln -s /usr/local/lib lib
-      - name: Echo contents of Python dir.
-        run: |
-          pip3 install rdflib
-          python -m site
-          # tree /home/runner/work/usegalaxy-eu-ansible/usegalaxy-eu-ansible
-          tree /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages || true
-          tree /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11 || true
-          tree /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/lib-dynload || true
-          tree /home/runner/.local/lib/python3.11/site-packages || true
-          false
       - name: Cache Ansible.
         id: cache-ansible
         uses: actions/cache@v3
         with:
-          path: /opt/hostedtoolcache/Python/*/*/lib/python*/dist-packages/ansible*
+          path: /opt/hostedtoolcache/Python/*/*/lib/python*/site-packages/ansible*
           key: ${{ hashFiles('infrastructure-playbook/requirements.txt') }}
       - name: Install Ansible (fast when an existing installation was already cached).
         working-directory: 'infrastructure-playbook'
