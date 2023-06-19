@@ -105,10 +105,26 @@ jobs:
           TPV_REQ=$(perl -pe 's/\\\n/ /' lib/galaxy/dependencies/conditional-requirements.txt | grep total-perspective-vortex)
           pip3 install --upgrade "$TPV_REQ"
 
+      - name: Render all configuration templates in the TPV directory.
+        working-directory: 'infrastructure-playbook'
+        run: |
+          export TMP_DIR=`mktemp -d`
+          openssl rand -base64 24 > .vault_password
+          echo "$TMP_DIR" > ../rendered_templates
+          for file in $(ls infrastructure-playbook/files/galaxy/tpv/*.{yml.j2,yaml.j2}); do
+            basename="$(basename $file)"
+            basename="$(echo ${basename%.*})"
+            ansible localhost --connection local --inventory hosts \
+              --module-name template \
+              --args "content={{hostvars['sn06.galaxyproject.eu']}} src="$file" dest="$TMP_DIR/$basename" \
+            > /dev/null
+          done
+
       - name: Run Total Perspective Vortex linter.
         run: |
           export PYTHONPATH=$(realpath ./galaxy/lib)
-          for file in $(ls infrastructure-playbook/files/galaxy/tpv/*.{yml,yaml}); do
+          TEMPLATED="$(cat rendered_templates)"
+          for file in "$(ls infrastructure-playbook/files/galaxy/tpv/*.{yml,yaml} $TEMPLATED/*.{yml,yaml})"; do
             echo Running TPV linter on "$file"...
             tpv lint $file || exit 1
           done
