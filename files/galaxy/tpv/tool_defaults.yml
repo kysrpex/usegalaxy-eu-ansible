@@ -33,6 +33,8 @@ tools:
         if: |
           if user is None:
               return True
+
+          False
         fail: Failure
       - id: remote_resources
         if: user is not None
